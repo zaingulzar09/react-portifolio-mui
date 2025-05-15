@@ -1,17 +1,53 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import SideBar from './Layout/SideBar';
+import Footer from './Layout/Footer'; // Import the Footer component
+import Home from './components/Home';
+import Expertises from './components/Expertises';
+import Education from './components/Education';
+import Connect from './components/Connect';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import reportWebVitals from './reportWebVitals';
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  const nodeRef = useRef(null);
+
+  return (
+    <TransitionGroup component={null}>
+      <CSSTransition key={location.key} timeout={300} classNames="fade" nodeRef={nodeRef}>
+        <div ref={nodeRef}>
+          <Routes location={location}>
+            <Route path="/" element={<Home />} />
+            <Route path="/expertises" element={<Expertises />} />
+            <Route path="/education" element={<Education />} />
+            <Route path="/contact" element={<Connect />} />
+          </Routes>
+        </div>
+      </CSSTransition>
+    </TransitionGroup>
+  );
+};
+
+const Layout = () => {
+  return (
+    <>
+      <SideBar />
+      <div className="content">
+        <AnimatedRoutes />
+      </div>
+      <Footer />
+    </>
+  );
+};
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <Router>
+    <Layout />
+  </Router>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
